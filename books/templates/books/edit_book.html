@@ -1,0 +1,83 @@
+{% extends "books/base.html" %}
+
+{% block title %}
+Edit Book
+{% endblock %}
+
+{% block content %}
+
+<h1>Edit Book</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="title"
+        value="{{ book.title }}"
+        placeholder="Title"
+    >
+
+    <input
+        type="text"
+        name="isbn"
+        value="{{ book.isbn }}"
+        placeholder="ISBN"
+    >
+
+    <input
+        type="number"
+        name="publication_year"
+        value="{{ book.publication_year }}"
+        placeholder="Publication Year"
+    >
+
+    <input
+        type="number"
+        name="total_copies"
+        value="{{ book.total_copies }}"
+        placeholder="Total Copies"
+    >
+
+    <select name="category">
+
+        {% for category in categories %}
+
+            <option
+                value="{{ category.id }}"
+                {% if category.id == book.category.id %}
+                    selected
+                {% endif %}
+            >
+                {{ category.name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <select name="author">
+
+        {% for author in authors %}
+
+            <option
+                value="{{ author.id }}"
+                {% if author.id == book.author.id %}
+                    selected
+                {% endif %}
+            >
+                {{ author.name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <button type="submit">
+        Save Changes
+    </button>
+
+</form>
+
+{% endblock %}

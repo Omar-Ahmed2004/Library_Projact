@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+
+<h1>Library Dashboard</h1>
+
+<hr>
+
+<h3>Total Books</h3>
+<p>{{ total_books }}</p>
+
+<h3>Available Copies</h3>
+<p>{{ available_books }}</p>
+
+<h3>Active Loans</h3>
+<p>{{ active_loans }}</p>
+
+<h3>Overdue Loans</h3>
+<p>{{ overdue_loans }}</p>
+
+<hr>
+
+<a href="{% url 'book_list' %}">
+    Books
+</a>
+
+<br>
+
+<a href="{% url 'my_loans' %}">
+    My Loans
+</a>
+
+</body>
+</html>

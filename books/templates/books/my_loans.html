@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Loans</title>
+</head>
+
+<body>
+
+    <h1>My Loans</h1>
+
+    {% for loan in loans %}
+
+        <hr>
+
+        <h3>{{ loan.book.title }}</h3>
+
+        <p>
+            Borrowed:
+            {{ loan.borrowed_at }}
+        </p>
+
+        <p>
+            Due Date:
+            {{ loan.due_date }}
+        </p>
+        {% if loan.returned %}
+
+            <p>Returned</p>
+
+        {% elif loan.is_overdue %}
+
+            <p>OVERDUE</p>
+
+        {% else %}
+
+            <p>Currently Borrowed</p>
+
+        {% endif %}
+
+        <br>
+
+        {% if loan.returned %}
+
+            <p>Returned</p>
+
+            <p>
+                Returned at:
+                {{ loan.returned_at }}
+            </p>
+
+        {% else %}
+
+            <p>Currently Borrowed</p>
+
+            <form method="POST"
+                action="{% url 'return_book' loan.id %}">
+
+                {% csrf_token %}
+
+                <button type="submit">
+                    Return Book
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    {% empty %}
+
+        <p>You have no loans.</p>
+
+    {% endfor %}
+    
+    <br>
+
+
+    <a href="{% url 'book_list' %}">
+        Back to Books
+    </a>
+
+</body>
+</html>
