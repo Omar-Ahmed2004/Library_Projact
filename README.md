@@ -1,39 +1,53 @@
 # Library Management System
 
-A web-based Library Management System built with Django.
-The system allows librarians to manage books and members to borrow and return books.
+A web-based Library Management System built with Django. The system allows librarians to manage books and members to borrow and return books.
 
 ## Features
 
 * User authentication (Login / Logout)
+
 * User roles:
 
   * Admin
   * Librarian
   * Member
+
 * Book management:
 
   * Add books
   * Edit books
   * Delete books
   * View book details
+
 * Categories and Authors
+
 * Search books by:
 
   * Title
   * Author
   * Category
   * ISBN
+
 * Filter books by category and author
+
 * Pagination
+
 * Borrow books
+
 * Return books
+
 * Track available copies
+
 * Due dates
+
 * Overdue loan detection
+
 * Personal loan history
+
 * Library dashboard
+
 * Django Admin Panel
+
 * Success, error, and warning messages
 
 ## Technologies
@@ -143,13 +157,13 @@ Can:
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/library-management-system.git
+git clone https://github.com/Omar-Ahmed2004/Library_Projact.git
 ```
 
 Move into the project directory:
 
 ```bash
-cd library-management-system
+cd Library_Projact
 ```
 
 Create a virtual environment:
@@ -160,14 +174,14 @@ python -m venv venv
 
 Activate the virtual environment on Windows:
 
-```bash
+```cmd
 venv\Scripts\activate
 ```
 
 Install dependencies:
 
 ```bash
-pip install django
+pip install -r requirements.txt
 ```
 
 Run migrations:
@@ -221,8 +235,9 @@ Possible future improvements include:
 
 ## Author
 
-**Omar Ahmed**
+Omar Ahmed
 
 Computer Science Graduate
 
 GitHub: https://github.com/Omar-Ahmed2004
+
