@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from books.views import book_list, book_detail, add_book , edit_book , delete_book , borrow_book , return_book , my_loans , dashboard
-from accounts.views import login_view, logout_view
+from accounts.views import login_view, logout_view, register_view
 
 
 
@@ -16,6 +16,7 @@ urlpatterns = [
 
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
+    path("register/", register_view, name="register"),
 
     path("books/add/", add_book, name="add_book"),
     path("books/<int:book_id>/edit/", edit_book, name="edit_book"),
