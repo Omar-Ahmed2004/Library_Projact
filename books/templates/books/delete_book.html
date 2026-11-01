@@ -1,28 +1,187 @@
 {% extends "books/base.html" %}
 
-{% block title %}
-Delete Book
-{% endblock %}
-
 {% block content %}
 
-<h1>Delete Book</h1>
+<style>
+    .delete-page {
+        max-width: 600px;
+        margin: 60px auto;
+    }
 
-<p>
-    Are you sure you want to delete
-    <strong>{{ book.title }}</strong>?
-</p>
+    .delete-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        border: 1px solid #fee2e2;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+    }
 
-<form method="POST">
-    {% csrf_token %}
+    .warning-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 22px;
+        border-radius: 50%;
+        background: #fee2e2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
 
-    <button type="submit">
-        Yes, Delete
-    </button>
+    .delete-card h1 {
+        font-size: 27px;
+        color: #111827;
+        margin-bottom: 10px;
+    }
 
-    <a href="{% url 'book_detail' book.id %}">
-        Cancel
-    </a>
-</form>
+    .delete-card .description {
+        color: #6b7280;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .book-preview {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 25px;
+    }
+
+    .book-preview h3 {
+        color: #111827;
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .book-preview p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .warning-text {
+        color: #b91c1c;
+        background: #fef2f2;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 13px;
+        margin-bottom: 25px;
+    }
+
+    .delete-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .cancel-btn {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        color: #374151;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .cancel-btn:hover {
+        background: #e5e7eb;
+    }
+
+    .delete-btn {
+        border: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        background: #dc2626;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .delete-btn:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 600px) {
+        .delete-page {
+            margin: 30px auto;
+        }
+
+        .delete-card {
+            padding: 28px 20px;
+        }
+
+        .delete-actions {
+            flex-direction: column-reverse;
+        }
+
+        .cancel-btn,
+        .delete-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="delete-page">
+
+    <div class="delete-card">
+
+        <div class="warning-icon">
+            ⚠️
+        </div>
+
+        <h1>Delete Book?</h1>
+
+        <p class="description">
+            Are you sure you want to delete this book?
+            This action cannot be undone.
+        </p>
+
+        <div class="book-preview">
+
+            <h3>{{ book.title }}</h3>
+
+            <p>
+                ISBN: {{ book.isbn }}
+            </p>
+
+        </div>
+
+        <div class="warning-text">
+            Once deleted, this book will be permanently removed
+            from the library.
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="delete-actions">
+
+                <a
+                    href="{% url 'book_detail' book.id %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit" class="delete-btn">
+                    Delete Book
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

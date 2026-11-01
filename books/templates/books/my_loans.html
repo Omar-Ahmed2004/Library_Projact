@@ -1,82 +1,365 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Loans</title>
-</head>
 
-<body>
+{% extends "books/base.html" %}
 
-    <h1>My Loans</h1>
+{% block title %}
+My Loans
+{% endblock %}
 
-    {% for loan in loans %}
+{% block content %}
 
-        <hr>
+<div class="loans-page">
 
-        <h3>{{ loan.book.title }}</h3>
+    <div class="page-header">
 
-        <p>
-            Borrowed:
-            {{ loan.borrowed_at }}
-        </p>
+        <div>
+            <h1>My Loans</h1>
+            <p>Track your borrowed books and return dates.</p>
+        </div>
 
-        <p>
-            Due Date:
-            {{ loan.due_date }}
-        </p>
-        {% if loan.returned %}
+    </div>
 
-            <p>Returned</p>
 
-        {% elif loan.is_overdue %}
+    {% if loans %}
 
-            <p>OVERDUE</p>
+        <div class="loans-list">
 
-        {% else %}
+            {% for loan in loans %}
 
-            <p>Currently Borrowed</p>
+                <div class="loan-card">
 
-        {% endif %}
+                    <div class="loan-icon">
+                        📖
+                    </div>
 
-        <br>
 
-        {% if loan.returned %}
+                    <div class="loan-info">
 
-            <p>Returned</p>
+                        <h2>
+                            {{ loan.book.title }}
+                        </h2>
+
+                        <p class="loan-author">
+                            By {{ loan.book.author }}
+                        </p>
+
+
+                        <div class="loan-details">
+
+                            <div>
+                                <span>Borrowed</span>
+                                <strong>
+                                    {{ loan.borrowed_at|date:"M d, Y" }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Due Date</span>
+                                <strong>
+                                    {{ loan.due_date|date:"M d, Y" }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="loan-status">
+
+                        {% if loan.returned %}
+
+                            <span class="status returned">
+                                Returned
+                            </span>
+
+                        {% elif loan.is_overdue %}
+
+                            <span class="status overdue">
+                                Overdue
+                            </span>
+
+                        {% else %}
+
+                            <span class="status active">
+                                Currently Borrowed
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if not loan.returned %}
+
+                            <form
+                                method="POST"
+                                action="{% url 'return_book' loan.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="return-btn"
+                                >
+                                    Return Book
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                📚
+            </div>
+
+            <h2>No Loans Yet</h2>
 
             <p>
-                Returned at:
-                {{ loan.returned_at }}
+                You haven't borrowed any books yet.
             </p>
 
-        {% else %}
+            <a
+                href="{% url 'book_list' %}"
+                class="browse-btn"
+            >
+                Browse Books
+            </a>
 
-            <p>Currently Borrowed</p>
+        </div>
 
-            <form method="POST"
-                action="{% url 'return_book' loan.id %}">
+    {% endif %}
 
-                {% csrf_token %}
-
-                <button type="submit">
-                    Return Book
-                </button>
-
-            </form>
-
-        {% endif %}
-
-    {% empty %}
-
-        <p>You have no loans.</p>
-
-    {% endfor %}
-    
-    <br>
+</div>
 
 
-    <a href="{% url 'book_list' %}">
-        Back to Books
-    </a>
+<style>
 
-</body>
-</html>
+    /* ================= PAGE ================= */
+
+    .loans-page {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 34px;
+        color: #111827;
+        margin-bottom: 6px;
+    }
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+
+    /* ================= LOANS ================= */
+
+    .loans-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .loan-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+        transition: 0.2s;
+    }
+
+    .loan-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 20px rgba(0,0,0,0.07);
+    }
+
+
+    /* ================= ICON ================= */
+
+    .loan-icon {
+        width: 55px;
+        height: 55px;
+        background: #eff6ff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        flex-shrink: 0;
+    }
+
+
+    /* ================= INFO ================= */
+
+    .loan-info {
+        flex: 1;
+    }
+
+    .loan-info h2 {
+        font-size: 19px;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+
+    .loan-author {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+
+    /* ================= DETAILS ================= */
+
+    .loan-details {
+        display: flex;
+        gap: 30px;
+    }
+
+    .loan-details span {
+        display: block;
+        color: #9ca3af;
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+
+    .loan-details strong {
+        color: #374151;
+        font-size: 13px;
+    }
+
+
+    /* ================= STATUS ================= */
+
+    .loan-status {
+        min-width: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+    }
+
+    .status {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status.active {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status.overdue {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .status.returned {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+
+
+    /* ================= RETURN ================= */
+
+    .return-btn {
+        background: #16a34a;
+        padding: 9px 15px;
+        font-size: 13px;
+    }
+
+    .return-btn:hover {
+        background: #15803d;
+    }
+
+
+    /* ================= EMPTY ================= */
+
+    .empty-state {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 70px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state h2 {
+        color: #111827;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        margin-bottom: 20px;
+    }
+
+    .browse-btn {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 7px;
+        font-weight: 500;
+    }
+
+    .browse-btn:hover {
+        background: #1d4ed8;
+    }
+
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 700px) {
+
+        .loan-card {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .loan-info {
+            min-width: calc(100% - 75px);
+        }
+
+        .loan-status {
+            width: 100%;
+            align-items: flex-start;
+            padding-left: 75px;
+        }
+
+        .loan-details {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}

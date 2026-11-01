@@ -1,3 +1,4 @@
+
 {% extends "books/base.html" %}
 
 {% block title %}
@@ -6,79 +7,340 @@
 
 {% block content %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+<div class="detail-page">
 
-    <h1>{{ book.title }}</h1>
-
-    <p>
-        <strong>Author:</strong>
-        {{ book.author }}
-    </p>
-
-    <p>
-        <strong>Category:</strong>
-        {{ book.category }}
-    </p>
-
-    <p>
-        <strong>ISBN:</strong>
-        {{ book.isbn }}
-    </p>
-
-    <p>
-        <strong>Publication Year:</strong>
-        {{ book.publication_year }}
-    </p>
-
-    <p>
-        <strong>Total Copies:</strong>
-        {{ book.total_copies }}
-    </p>
-
-    <p>
-        <strong>Available Copies:</strong>
-        {{ book.available_copies }}
-    </p>
-
-    {% if book.available_copies > 0 %}
-
-    <form method="POST"
-          action="{% url 'borrow_book' book.id %}">
-
-        {% csrf_token %}
-
-        <button type="submit">
-            Borrow Book
-        </button>
-
-    </form>
-
-    {% else %}
-
-        <p>Book is not available.</p>
-
-    {% endif %}
-
-    <hr>
-
-    {% if user.groups.all.0.name == "Librarian" %}
-            
-        <a href="{% url 'edit_book' book.id %}">
-            Edit    <b>|</b>
-        </a>
-        <a href="{% url 'delete_book' book.id %}">
-                Delete
-        </a>
-
-    {% endif %}
-
-    <hr>
-
-    <a href="{% url 'book_list' %}">
-        Back to Books
+    <a href="{% url 'book_list' %}" class="back-link">
+        ← Back to Books
     </a>
+
+    <div class="book-detail-card">
+
+        <div class="book-cover">
+            <div class="book-cover-icon">
+                📚
+            </div>
+
+            <span>LIBRARY</span>
+        </div>
+
+
+        <div class="book-details">
+
+            <span class="book-category">
+                {{ book.category }}
+            </span>
+
+            <h1>{{ book.title }}</h1>
+
+            <p class="book-author">
+                By <strong>{{ book.author }}</strong>
+            </p>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <span>ISBN</span>
+                    <strong>{{ book.isbn }}</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Publication Year</span>
+                    <strong>{{ book.publication_year }}</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Total Copies</span>
+                    <strong>{{ book.total_copies }}</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Available Copies</span>
+                    <strong class="available">
+                        {{ book.available_copies }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="book-actions">
+
+                {% if book.available_copies > 0 %}
+
+                    <form
+                        method="POST"
+                        action="{% url 'borrow_book' book.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button type="submit" class="borrow-btn">
+                            Borrow Book
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <div class="unavailable">
+                        Currently unavailable
+                    </div>
+
+                {% endif %}
+
+
+                {% if user.groups.all.0.name == "Librarian" %}
+
+                    <a
+                        href="{% url 'edit_book' book.id %}"
+                        class="edit-btn"
+                    >
+                        Edit Book
+                    </a>
+
+                    <a
+                        href="{% url 'delete_book' book.id %}"
+                        class="delete-btn"
+                    >
+                        Delete Book
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    /* ================= PAGE ================= */
+
+    .detail-page {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #6b7280;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .back-link:hover {
+        color: #2563eb;
+    }
+
+
+    /* ================= DETAIL CARD ================= */
+
+    .book-detail-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 35px;
+        display: flex;
+        gap: 40px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+
+    /* ================= BOOK COVER ================= */
+
+    .book-cover {
+        width: 230px;
+        height: 310px;
+        flex-shrink: 0;
+        background: linear-gradient(
+            145deg,
+            #1e3a8a,
+            #2563eb
+        );
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        box-shadow: 0 12px 25px rgba(37, 99, 235, 0.25);
+    }
+
+    .book-cover-icon {
+        font-size: 65px;
+        margin-bottom: 20px;
+    }
+
+    .book-cover span {
+        font-size: 12px;
+        letter-spacing: 3px;
+        opacity: 0.8;
+    }
+
+
+    /* ================= BOOK DETAILS ================= */
+
+    .book-details {
+        flex: 1;
+    }
+
+    .book-category {
+        display: inline-block;
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .book-details h1 {
+        font-size: 36px;
+        color: #111827;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    .book-author {
+        color: #6b7280;
+        margin-bottom: 30px;
+    }
+
+
+    /* ================= DETAILS GRID ================= */
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .detail-item {
+        background: #f9fafb;
+        border: 1px solid #f0f0f0;
+        padding: 15px;
+        border-radius: 9px;
+    }
+
+    .detail-item span {
+        display: block;
+        color: #9ca3af;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .detail-item strong {
+        color: #374151;
+        font-size: 14px;
+    }
+
+    .detail-item .available {
+        color: #16a34a;
+    }
+
+
+    /* ================= ACTIONS ================= */
+
+    .book-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .borrow-btn {
+        background: #2563eb;
+        padding: 11px 20px;
+    }
+
+    .borrow-btn:hover {
+        background: #1d4ed8;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        padding: 10px 17px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .edit-btn {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .edit-btn:hover {
+        background: #e5e7eb;
+    }
+
+    .delete-btn {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .delete-btn:hover {
+        background: #fecaca;
+    }
+
+    .unavailable {
+        background: #fef2f2;
+        color: #dc2626;
+        padding: 11px 17px;
+        border-radius: 7px;
+        font-size: 14px;
+    }
+
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 750px) {
+
+        .book-detail-card {
+            flex-direction: column;
+            padding: 25px;
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 230px;
+        }
+
+        .book-details h1 {
+            font-size: 28px;
+        }
+
+    }
+
+    @media (max-width: 500px) {
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .book-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .book-actions form,
+        .book-actions button,
+        .edit-btn,
+        .delete-btn {
+            width: 100%;
+            text-align: center;
+        }
+
+    }
+
+</style>
+
 {% endblock %}

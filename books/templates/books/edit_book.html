@@ -1,83 +1,263 @@
 {% extends "books/base.html" %}
 
-{% block title %}
-Edit Book
-{% endblock %}
-
 {% block content %}
 
-<h1>Edit Book</h1>
+<style>
+    .form-page {
+        max-width: 850px;
+        margin: 0 auto;
+    }
 
-<form method="POST">
+    .form-header {
+        margin-bottom: 25px;
+    }
 
-    {% csrf_token %}
+    .form-header h1 {
+        font-size: 30px;
+        color: #111827;
+        margin-bottom: 7px;
+    }
 
-    <input
-        type="text"
-        name="title"
-        value="{{ book.title }}"
-        placeholder="Title"
-    >
+    .form-header p {
+        color: #6b7280;
+        font-size: 15px;
+    }
 
-    <input
-        type="text"
-        name="isbn"
-        value="{{ book.isbn }}"
-        placeholder="ISBN"
-    >
+    .form-card {
+        background: white;
+        border-radius: 18px;
+        padding: 32px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+        border: 1px solid #eef2f7;
+    }
 
-    <input
-        type="number"
-        name="publication_year"
-        value="{{ book.publication_year }}"
-        placeholder="Publication Year"
-    >
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
 
-    <input
-        type="number"
-        name="total_copies"
-        value="{{ book.total_copies }}"
-        placeholder="Total Copies"
-    >
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
 
-    <select name="category">
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
 
-        {% for category in categories %}
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
 
-            <option
-                value="{{ category.id }}"
-                {% if category.id == book.category.id %}
-                    selected
-                {% endif %}
-            >
-                {{ category.name }}
-            </option>
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #f9fafb;
+        color: #111827;
+        transition: 0.2s;
+    }
 
-        {% endfor %}
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
 
-    </select>
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 22px;
+        border-top: 1px solid #eef2f7;
+    }
 
-    <select name="author">
+    .cancel-btn {
+        display: inline-block;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        color: #374151;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
 
-        {% for author in authors %}
+    .cancel-btn:hover {
+        background: #e5e7eb;
+    }
 
-            <option
-                value="{{ author.id }}"
-                {% if author.id == book.author.id %}
-                    selected
-                {% endif %}
-            >
-                {{ author.name }}
-            </option>
+    .submit-btn {
+        border: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
 
-        {% endfor %}
+    .submit-btn:hover {
+        background: #1f2937;
+        transform: translateY(-1px);
+    }
 
-    </select>
+    @media (max-width: 650px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
 
-    <button type="submit">
-        Save Changes
-    </button>
+        .form-group.full {
+            grid-column: auto;
+        }
 
-</form>
+        .form-card {
+            padding: 22px;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .cancel-btn,
+        .submit-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="form-page">
+
+    <div class="form-header">
+        <h1>Edit Book</h1>
+        <p>Update the information of this book.</p>
+    </div>
+
+    <div class="form-card">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label for="title">Book Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value="{{ book.title }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="isbn">ISBN</label>
+                    <input
+                        type="text"
+                        id="isbn"
+                        name="isbn"
+                        value="{{ book.isbn }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="publication_year">Publication Year</label>
+                    <input
+                        type="number"
+                        id="publication_year"
+                        name="publication_year"
+                        value="{{ book.publication_year }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="total_copies">Total Copies</label>
+                    <input
+                        type="number"
+                        id="total_copies"
+                        name="total_copies"
+                        min="1"
+                        value="{{ book.total_copies }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+
+                    <select id="category" name="category" required>
+
+                        {% for category in categories %}
+                            <option
+                                value="{{ category.id }}"
+                                {% if category.id == book.category.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Author</label>
+
+                    <select id="author" name="author" required>
+
+                        {% for author in authors %}
+                            <option
+                                value="{{ author.id }}"
+                                {% if author.id == book.author.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ author.name }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'book_detail' book.id %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit" class="submit-btn">
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

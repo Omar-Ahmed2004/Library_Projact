@@ -1,33 +1,183 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
+{% extends "books/base.html" %}
 
-    <h1>Login</h1>
+{% block content %}
 
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
+<style>
+    .login-wrapper {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 35px 15px;
+    }
 
-    <form method="POST">
+    .login-card {
+        width: 100%;
+        max-width: 430px;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 15px 45px rgba(17, 24, 39, 0.09);
+    }
 
-        {% csrf_token %}
+    .login-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 22px;
+        border-radius: 18px;
+        background: #eef2ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+    }
 
-        <label>Username:</label>
-        <input type="text" name="username">
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-        <br><br>
+    .login-header h1 {
+        color: #111827;
+        font-size: 27px;
+        margin-bottom: 9px;
+    }
 
-        <label>Password:</label>
-        <input type="password" name="password">
+    .login-header p {
+        color: #6b7280;
+        font-size: 14px;
+    }
 
-        <br><br>
+    .error-message {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        border-radius: 9px;
+        padding: 12px;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
 
-        <button type="submit">Login</button>
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 19px;
+    }
 
-    </form>
+    .login-field label {
+        display: block;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
 
-</body>
-</html>
+    .login-field input {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #f9fafb;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .login-field input:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: #111827;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-top: 5px;
+    }
+
+    .login-btn:hover {
+        background: #374151;
+        transform: translateY(-2px);
+    }
+
+    .login-footer {
+        text-align: center;
+        color: #9ca3af;
+        font-size: 12px;
+        margin-top: 25px;
+    }
+
+    @media (max-width: 500px) {
+        .login-card {
+            padding: 28px 22px;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+
+    <div class="login-card">
+
+        <div class="login-icon">📚</div>
+
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your library account.</p>
+        </div>
+
+        {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" class="login-form">
+
+            {% csrf_token %}
+
+            <div class="login-field">
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    required
+                >
+            </div>
+
+            <div class="login-field">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-btn">
+                Sign In
+            </button>
+
+        </form>
+
+        <div class="login-footer">
+            Library Management System
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
